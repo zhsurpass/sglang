@@ -6,7 +6,7 @@ from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import CustomTestCase
 
 register_npu_ci(est_time=400, suite="per-commit-2-npu-a2")
-
+register_npu_ci(est_time=400, suite="nightly-2-npu-a3", nightly=True)
 
 class TestQwen317BGPTQInt8(GSM8KAscendMixin, CustomTestCase):
     """Testcase: Verify that the inference accuracy of the Eco-Tech/Qwen3-30B-A3B-w4a4-LAOS model on the GSM8K dataset is no less than 0.85.
