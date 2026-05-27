@@ -1,0 +1,69 @@
+name: Single Test (NPU)
+# test round 1: Add NPU utils test cases for model file verifier, request logger, and scheduler status logger
+
+on:
+  pull_request:
+    branches:
+      - testcases
+    paths:
+      - ".github/workflows/single-test-npu.yml"
+  workflow_dispatch:
+    inputs:
+      test_case:
+        description: 'Test case file path (e.g., test/registered/ascend/basic_function/utils/GENERATED_20260526/test_npu_model_file_verifier.py)'
+        required: true
+        type: string
+        default: 'test/registered/ascend/basic_function/utils/GENERATED_20260526/test_npu_model_file_verifier.py'
+
+env:
+  TEST_CASE: ${{ github.event.inputs.test_case || 'test/registered/ascend/basic_function/utils/GENERATED_20260526/test_npu_model_file_verifier.py' }}
+
+jobs:
+  single-node-poc:
+    runs-on: linux-aarch64-a3-2
+    container:
+      image: swr.cn-southwest-2.myhuaweicloud.com/base_image/dockerhub/lmsysorg/sglang:main-cann8.5.0-a3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        env:
+          TORCH_CACHE_URL: "http://cache-service.nginx-pypi-cache.svc.cluster.local/whl/cpu"
+          PYPI_CACHE_URL: "http://cache-service.nginx-pypi-cache.svc.cluster.local/pypi/simple"
+          UV_INDEX_URL: "http://cache-service.nginx-pypi-cache.svc.cluster.local/pypi/simple"
+          GITHUB_PROXY_URL: "https://gh-proxy.test.osinfra.cn/"
+        run: |
+          # speed up by using infra cache services
+          CACHING_URL="cache-service.nginx-pypi-cache.svc.cluster.local"
+          sed -Ei "s@(ports|archive).ubuntu.com@${CACHING_URL}:8081@g" /etc/apt/sources.list
+          pip config set global.index-url http://${CACHING_URL}/pypi/simple
+          pip config set global.trusted-host "${CACHING_URL}"
+
+          bash scripts/ci/npu/npu_ci_install_dependency.sh a3
+
+          # copy required file from our daily cache
+          cp ~/.cache/modelscope/hub/datasets/otavia/ShareGPT_Vicuna_unfiltered/ShareGPT_V3_unfiltered_cleaned_split.json /tmp
+          # copy gsm8k dataset
+          cp ~/.cache/modelscope/hub/datasets/tmp/test.jsonl /tmp
+
+      - name: Print Log Information
+        run: |
+          bash scripts/ci/npu/npu_log_print.sh
+
+      - name: Run single test case
+        timeout-minutes: 120
+        env:
+          SGLANG_USE_MODELSCOPE: true
+          SGLANG_IS_IN_CI: true
+          HF_ENDPOINT: https://hf-mirror.com
+          TORCH_EXTENSIONS_DIR: /tmp/torch_extensions
+          PYTORCH_NPU_ALLOC_CONF: "expandable_segments:True"
+          STREAMS_PER_DEVICE: 32
+          TRANSFORMERS_VERBOSITY: "error"
+        run: |
+          cd test
+          # Run all three test files
+          python3 -m pytest registered/ascend/basic_function/utils/GENERATED_20260526/test_npu_model_file_verifier.py -v --timeout=3600
+          python3 -m pytest registered/ascend/basic_function/utils/GENERATED_20260526/test_npu_request_logger.py -v --timeout=3600
+          python3 -m pytest registered/ascend/basic_function/utils/GENERATED_20260526/test_npu_scheduler_status_logger.py -v --timeout=3600
