@@ -179,9 +179,7 @@ class TestNPUHierarchicalCacheHit(TestAscendMultiNodePdSepTestCaseBase):
             prompt_token_len=600, max_new_tokens=1
         )
         self.assertEqual(cached_tokens_2, 512, msg="Cache hit tokens should be 512")
-        self.assertLess(
-            ttft_2, ttft_1, msg="TTFT should be reduced after cache hit"
-        )
+        self.assertLess(ttft_2, ttft_1, msg="TTFT should be reduced after cache hit")
 
 
 if __name__ == "__main__":

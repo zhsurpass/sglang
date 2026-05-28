@@ -144,7 +144,9 @@ MODEL_CONFIG = {
 }
 
 
-class TestNPUBucketAdjustIntervalSecsConcurrency(TestAscendPerfMultiNodePdSepTestCaseBase):
+class TestNPUBucketAdjustIntervalSecsConcurrency(
+    TestAscendPerfMultiNodePdSepTestCaseBase
+):
     """Testcase：Verify after configuring the --bucket-adjust-interval-secs parameter for the PD classification scenario
     router, the service can stably support 2048 concurrent requests
 
