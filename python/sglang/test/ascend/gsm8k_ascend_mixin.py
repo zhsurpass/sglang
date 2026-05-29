@@ -87,7 +87,7 @@ class GSM8KAscendMixin(ABC):
                 num_shots=self.gsm8k_num_shots,
             )
             metrics = run_eval(args)
-            model_metrics["accuracy"] = metrics["accuracy"]
+            model_metrics["accuracy"] = metrics["score"]
             model_metrics["output_throughput"] = metrics["output_throughput"]
             self.assertGreaterEqual(
                 metrics["score"],
