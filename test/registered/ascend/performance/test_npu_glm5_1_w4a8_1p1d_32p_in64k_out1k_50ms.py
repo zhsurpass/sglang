@@ -167,7 +167,7 @@ class TestNPUGLM5_1_W4A8_PD_SEP_AIME2026(TestAscendAccuracyMultiNodePdSepTestCas
 
     model_config = GLM_5_1_PD_SEP_MODEL_CONFIG
     accuracy = 95.3
-    datasets = ["aime2026"]
+    datasets = ["aime26"]
     few_shot_num = 0
     generation_config = {"max_tokens": 8192, "temperature": 1.0}
 

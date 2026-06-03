@@ -100,9 +100,9 @@ class TestNPUQwen3_6_35BA3B_1P_AIME2026(TestAscendAccuracyTestCaseBase):
     other_args = QWEN3_6_35B_A3B_64K_PREFIX_OTHER_ARGS
     envs = QWEN3_6_35B_A3B_64K_PREFIX_ENVS
     accuracy = 92.7
-    datasets = ["aime2026"]
+    datasets = ["aime26"]
     few_shot_num = 0
-    generation_config = {"max_tokens": 8192, "temperature": 1.0}
+    generation_config = {"max_tokens": 65536, "temperature": 1.0}
 
     @classmethod
     def tearDownClass(cls):

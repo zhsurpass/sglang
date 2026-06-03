@@ -1,6 +1,7 @@
 import os
 import unittest
 
+from sglang.test.ascend.e2e.test_npu_accuracy_utils import TestAscendAccuracyTestCaseBase
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
     AISBENCHMARK_DATASET_DEFAULT,
     BENCHMARK_TOOL_DEFAULT,
@@ -114,6 +115,18 @@ class TestNPUMiniMaxM2_5_W8A8_8P_In64k_Out1k_Prefix(TestAscendPerformanceTestCas
         """Run NPU performance test for MiniMax-M2.5-w8a8 in64k out1k prefix"""
         self.run_throughput()
 
+class TestNPUMiniMaxM2_5_W8A8_8P_In3k5_Out1k5_aime25(TestAscendAccuracyTestCaseBase):
+    model = MINIMAX_M2_5_W8A8_MODEL_PATH
+    envs = MINIMAX_M2_5_64K_PREFIX_ENVS
+    other_args = MINIMAX_M2_5_64K_PREFIX_OTHER_ARGS
+    accuracy = 86.3
+    datasets = ["aime25"]
+    few_shot_num = 5
+    generation_config = {"max_tokens": 65536, "temperature": 1.0}
+    max_concurrency = 16
+
+    def test_accuracy(self):
+        self.run_accuracy()
 
 if __name__ == "__main__":
     unittest.main()

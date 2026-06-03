@@ -1,7 +1,7 @@
 import unittest
 
 from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
-    TestAscendAccuracyTestCaseBase,
+    TestAscendAccuracyMultiNodePdMixTestCaseBase
 )
 from sglang.test.ascend.e2e.test_npu_multi_node_utils import NIC_NAME
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
@@ -96,13 +96,13 @@ OTHER_ARGS = [
 ]
 
 
-class TestNPUKimiK2_6_W4A8_8P_AIME2025(TestAscendAccuracyTestCaseBase):
+class TestNPUKimiK2_6_W4A8_8P_AIME2025(TestAscendAccuracyMultiNodePdMixTestCaseBase):
 
     model = KIMI_K2_6_W4A8_MODEL_PATH
     other_args = OTHER_ARGS
     envs = ENVS
     accuracy = 96.1
-    datasets = ["aime2025"]
+    datasets = ["aime25"]
     few_shot_num = 0
     generation_config = {"max_tokens": 8192, "temperature": 1.0}
 

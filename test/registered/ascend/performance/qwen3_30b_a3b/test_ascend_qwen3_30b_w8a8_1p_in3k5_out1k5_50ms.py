@@ -1,5 +1,6 @@
 import unittest
 
+from sglang.test.ascend.e2e.test_npu_accuracy_utils import TestAscendAccuracyTestCaseBase
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
     AISBENCHMARK_DATASET_DEFAULT,
     BENCHMARK_TOOL_DEFAULT,
@@ -105,6 +106,18 @@ class TestQwen30B(TestAscendPerformanceTestCaseBase):
     def test_qwen3_30b(self):
         self.run_throughput()
 
+class TestQwen30B_A3B_aime25(TestAscendAccuracyTestCaseBase):
+    model = QWEN3_30B_A3B_W8A8_VLLM_MODEL_PATH
+    envs = QWEN3_30B_A3B_ENVS
+    other_args = QWEN3_30B_A3B_OTHER_ARGS
+    accuracy = 61.3
+    datasets = ["aime25"]
+    few_shot_num = 5
+    generation_config = {"max_tokens": 65536, "temperature": 1.0}
+    max_concurrency = 16
+
+    def test_accuracy(self):
+        self.run_accuracy()
 
 if __name__ == "__main__":
     unittest.main()
