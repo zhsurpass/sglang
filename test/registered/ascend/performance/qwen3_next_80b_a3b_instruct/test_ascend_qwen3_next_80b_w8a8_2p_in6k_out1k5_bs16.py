@@ -1,6 +1,8 @@
 import unittest
 
-from sglang.test.ascend.e2e.test_npu_accuracy_utils import TestAscendAccuracyTestCaseBase
+from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
+    TestAscendAccuracyTestCaseBase,
+)
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
     QWEN3_NEXT_80B_A3B_MODEL_PATH,
     QWEN3_NEXT_80B_A3B_W8A8_MODEL_PATH,
@@ -109,6 +111,7 @@ class TestQwen3Next80BA3B(TestAscendPerformanceTestCaseBase):
     def test_qwen3_next_80b_a3b(self):
         self.run_throughput()
 
+
 class TestQwen3Next80BA3B_aime25(TestAscendAccuracyTestCaseBase):
     model = QWEN3_NEXT_80B_A3B_W8A8_MODEL_PATH
     envs = QWEN3_NEXT_80B_A3B_ENVS
@@ -121,6 +124,7 @@ class TestQwen3Next80BA3B_aime25(TestAscendAccuracyTestCaseBase):
 
     def test_aime26(self):
         self.run_accuracy()
+
 
 if __name__ == "__main__":
     unittest.main()
