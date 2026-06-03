@@ -5,7 +5,6 @@ from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
 )
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
     AISBENCHMARK_DATASET_DEFAULT,
-    BENCHMARK_TOOL_DEFAULT,
     DEFAULT_URL_FOR_TEST,
     QWEN3_32B_EAGLE_MODEL_PATH,
     QWEN3_32B_W8A8_MODEL_PATH,
