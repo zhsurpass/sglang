@@ -116,7 +116,7 @@ class TestQwen3Next80BA3B_aime25(TestAscendAccuracyTestCaseBase):
     model = QWEN3_NEXT_80B_A3B_W8A8_MODEL_PATH
     envs = QWEN3_NEXT_80B_A3B_ENVS
     other_args = QWEN3_NEXT_80B_A3B_OTHER_ARGS
-    accuracy = 69.5
+    accuracy = 0.695
     datasets = ["aime25"]
     few_shot_num = 0
     generation_config = {"max_tokens": 65536, "temperature": 1.0}
