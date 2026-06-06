@@ -212,7 +212,11 @@ def assert_metrics(self, metrics):
         raise Exception("No metrics obtained from benchmark")
 
     if self.accuracy is not None:
-        dump_metric("accuracy", float(metrics["accuracy"]), labels={"test_case": self.__class__.__name__, "type": "accuracy"})
+        dump_metric(
+            "accuracy",
+            float(metrics["accuracy"]),
+            labels={"test_case": self.__class__.__name__, "type": "accuracy"}
+        )
         self.assertGreaterEqual(
             float(metrics["accuracy"]),
             self.accuracy * ACCURACY_TOLERANCE,
