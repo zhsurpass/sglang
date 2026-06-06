@@ -53,7 +53,7 @@ jobs:
       - name: Check npu info
         run: |
           npu-smi info
-  
+
       - name: Run test
         timeout-minutes: 120
         env:
@@ -75,6 +75,7 @@ jobs:
             exit 1
           fi
 
+          # prepare for output data
           current_date=$(date +%Y%m%d)
           test_data_output_path=/root/.cache/tests/output/${{ inputs.test_type }}/${current_date}
           mkdir -p ${test_data_output_path}
@@ -84,6 +85,7 @@ jobs:
           mkdir -p ${METRICS_DATA_FILE}
           echo "Metrics file path: ${METRICS_DATA_FILE}"
 
+          # copy required file from our daily cache
           cp ~/.cache/modelscope/hub/datasets/otavia/ShareGPT_Vicuna_unfiltered/ShareGPT_V3_unfiltered_cleaned_split.json /tmp
           curl -o /tmp/test.jsonl -L https://gh-proxy.test.osinfra.cn/https://raw.githubusercontent.com/openai/grade-school-math/master/grade_school_math/data/test.jsonl
 
@@ -136,14 +138,15 @@ jobs:
           source /usr/local/Ascend/cann/set_env.sh || true
           source /usr/local/Ascend/nnal/atb/set_env.sh || true
 
+           # Set environment of cann
           log_path="/root/.cache/tests/logs/log/${current_date}/${tc_name}/${HOSTNAME}"
           rm -rf ${log_path}
           mkdir -p ${log_path}
           echo "Log path: ${log_path}"
 
           echo "Running test case ${test_case}"
-          ${PYTHON_FOR_SGLANG} -u ${test_case} 2>&1 | tee /tmp/test_output.log
-          test_exit_code=${PIPESTATUS[0]}
+          test_exit_code=0
+          ${PYTHON_FOR_SGLANG} -u ${test_case} 2>&1 | tee /tmp/test_output.log || test_exit_code=$?
           echo "Finished test case ${test_case}"
 
           if [ "${test_exit_code}" = "0" ]; then
@@ -156,6 +159,7 @@ jobs:
 
           echo "test_status=${test_status}" >> $GITHUB_ENV
           echo "tc_name=${tc_name}" >> $GITHUB_ENV
+          export test_status tc_name
 
           echo "## ${tc_name}  ${status_icon} ${test_status}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
