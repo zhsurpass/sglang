@@ -392,8 +392,6 @@ def run_bench_serving(
             cmd_args.extend(["--num-prompts", str(num_prompts)])
         if request_rate:
             cmd_args.extend(["--request-rate", str(request_rate)])
-        if repeat_rate is not None:
-            cmd_args.extend(["--repeat-rate", str(repeat_rate)])
     else:
         cmd_args = [
             PYTHON_FOR_TEST_TOOL,
@@ -435,8 +433,6 @@ def run_bench_serving(
             cmd_args.extend(["--seed", str(seed)])
         if output_file:
             cmd_args.extend(["--output-file", str(output_file)])
-        if repeat_rate is not None:
-            cmd_args.extend(["--repeat-rate", str(repeat_rate)])
     logger.info(f"Command: {' '.join(cmd_args)}")
 
     # Run benchmark command and capture output
