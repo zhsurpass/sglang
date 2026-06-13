@@ -55,7 +55,7 @@ class ServerWithGrammar(CustomTestCase):
         kill_process_tree(cls.process.pid)
 
 
-class TestNPUXGrammarBackend(
+class TestXGrammarBackend(
     ServerWithGrammar,
     JSONConstrainedMixin,
     EBNFConstrainedMixin,
