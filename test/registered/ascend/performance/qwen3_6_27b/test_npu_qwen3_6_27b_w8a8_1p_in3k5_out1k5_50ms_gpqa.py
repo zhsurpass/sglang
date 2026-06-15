@@ -114,9 +114,10 @@ class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_gpqa(TestAscendAccuracyTestCaseBase):
     accuracy = 0.878
     datasets = ["gpqa_diamond"]
     few_shot_num = 0
-    eval_batch_size = 8
+    # eval_batch_size = 8
+    eval_batch_size = 4
     generation_config = {"max_tokens": 81920, "temperature": 1.0}
-
+    # generation_config = {"max_tokens": 128000, "temperature": 1.0}
     def test_accuracy(self):
         self.run_accuracy()
 
