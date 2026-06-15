@@ -6,7 +6,8 @@ from sglang.test.ascend.e2e.test_npu_accuracy_utils import (
 from sglang.test.ascend.e2e.test_npu_performance_utils import (
     AISBENCHMARK_DATASET_DEFAULT,
     BENCHMARK_TOOL_DEFAULT,
-    QWEN3_6_27B_W8A8_MODEL_PATH,
+    # QWEN3_6_27B_W8A8_MODEL_PATH,
+    QWEN3_6_27B_MODEL_PATH,
     TestAscendPerformanceTestCaseBase,
 )
 from sglang.test.ci.ci_register import register_npu_ci
@@ -63,8 +64,8 @@ QWEN3_6_27B_3K5_1K5_OTHER_ARGS = [
     50,
     54,
     "--enable-multimodal",
-    "--quantization",
-    "modelslim",
+    # "--quantization",
+    # "modelslim",
     "--mm-attention-backend",
     "ascend_attn",
     "--dtype",
@@ -87,7 +88,8 @@ class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_50ms(TestAscendPerformanceTestCaseBase)
 
     benchmark_tool = BENCHMARK_TOOL_DEFAULT
     dataset_type = AISBENCHMARK_DATASET_DEFAULT
-    model = QWEN3_6_27B_W8A8_MODEL_PATH
+    # model = QWEN3_6_27B_W8A8_MODEL_PATH
+    model = QWEN3_6_27B_MODEL_PATH
     other_args = QWEN3_6_27B_3K5_1K5_OTHER_ARGS
     envs = QWEN3_6_27B_3K5_1K5_ENVS
     dataset_name = "random"
@@ -105,7 +107,8 @@ class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_50ms(TestAscendPerformanceTestCaseBase)
 
 
 class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_gpqa(TestAscendAccuracyTestCaseBase):
-    model = QWEN3_6_27B_W8A8_MODEL_PATH
+    # model = QWEN3_6_27B_W8A8_MODEL_PATH
+    model = QWEN3_6_27B_MODEL_PATH
     envs = QWEN3_6_27B_3K5_1K5_ENVS
     other_args = QWEN3_6_27B_3K5_1K5_OTHER_ARGS
     accuracy = 0.878
