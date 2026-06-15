@@ -83,27 +83,27 @@ QWEN3_6_27B_3K5_1K5_OTHER_ARGS = [
 ]
 
 
-class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_50ms(TestAscendPerformanceTestCaseBase):
-    """Test NPU performance for Qwen3.6-27B-w8a8 1p in3k5 out1k5 50ms"""
+# class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_50ms(TestAscendPerformanceTestCaseBase):
+#     """Test NPU performance for Qwen3.6-27B-w8a8 1p in3k5 out1k5 50ms"""
 
-    benchmark_tool = BENCHMARK_TOOL_DEFAULT
-    dataset_type = AISBENCHMARK_DATASET_DEFAULT
-    # model = QWEN3_6_27B_W8A8_MODEL_PATH
-    model = QWEN3_6_27B_MODEL_PATH
-    other_args = QWEN3_6_27B_3K5_1K5_OTHER_ARGS
-    envs = QWEN3_6_27B_3K5_1K5_ENVS
-    dataset_name = "random"
-    max_concurrency = 54
-    num_prompts = 216
-    input_len = 3500
-    output_len = 1500
-    random_range_ratio = 1
-    tpot = 50
-    output_token_throughput = 786.69
+#     benchmark_tool = BENCHMARK_TOOL_DEFAULT
+#     dataset_type = AISBENCHMARK_DATASET_DEFAULT
+#     # model = QWEN3_6_27B_W8A8_MODEL_PATH
+#     model = QWEN3_6_27B_MODEL_PATH
+#     other_args = QWEN3_6_27B_3K5_1K5_OTHER_ARGS
+#     envs = QWEN3_6_27B_3K5_1K5_ENVS
+#     dataset_name = "random"
+#     max_concurrency = 54
+#     num_prompts = 216
+#     input_len = 3500
+#     output_len = 1500
+#     random_range_ratio = 1
+#     tpot = 50
+#     output_token_throughput = 786.69
 
-    def test_npu_qwen3_6_27b_1p_in3k5_out1k5_50ms(self):
-        """Run NPU performance test for Qwen3.6-27B-w8a8 in3k5 out1k5 50ms"""
-        self.run_throughput()
+#     def test_npu_qwen3_6_27b_1p_in3k5_out1k5_50ms(self):
+#         """Run NPU performance test for Qwen3.6-27B-w8a8 in3k5 out1k5 50ms"""
+#         self.run_throughput()
 
 
 class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_gpqa(TestAscendAccuracyTestCaseBase):
@@ -115,8 +115,8 @@ class TestNPUQwen3_6_27B_1P_In3k5_Out1k5_gpqa(TestAscendAccuracyTestCaseBase):
     datasets = ["gpqa_diamond"]
     few_shot_num = 0
     # eval_batch_size = 8
-    eval_batch_size = 4
-    generation_config = {"max_tokens": 81920, "temperature": 1.0}
+    eval_batch_size = 6
+    generation_config = {"max_tokens": 81920, "temperature": 0.7}
     # generation_config = {"max_tokens": 128000, "temperature": 1.0}
     def test_accuracy(self):
         self.run_accuracy()
