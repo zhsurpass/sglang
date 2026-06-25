@@ -22,7 +22,12 @@ class TestMatchedStop(CustomTestCase, MatchedStopMixin):
             cls.model,
             cls.base_url,
             timeout=300,
-            other_args=["--max-running-requests", "10"],
+            other_args=[
+            "--max-running-requests",
+            "10",
+            "--attention-backend",
+            "ascend",
+            ],
         )
 
     @classmethod
