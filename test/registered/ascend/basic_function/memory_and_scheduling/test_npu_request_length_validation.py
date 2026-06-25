@@ -49,6 +49,20 @@ class TestRequestLengthValidation(CustomTestCase):
     def tearDownClass(cls):
         kill_process_tree(cls.process.pid)
 
+    def test_input_length_no_longer_than_context_length_success(self):
+        client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
+        long_text = "hello " * 500
+        response = client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "user", "content": long_text},
+            ],
+            temperature=0,
+        )
+        completions_tokens = response.usage.completion_tokens
+        self.assertGreater(completions_tokens, 0)
+
+
     def test_input_length_longer_than_context_length(self):
         client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
 
@@ -97,6 +111,20 @@ class TestRequestLengthValidation(CustomTestCase):
             )
 
         self.assertIn("is longer than the model's context length", str(cm.exception))
+
+    def test_not_longer_max_tokens_validation_success(self):
+        client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
+        long_text = "hello "
+        response = client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "user", "content": long_text},
+            ],
+            temperature=0,
+            max_tokens=800,
+        )
+        completions_tokens = response.usage.completion_tokens
+        self.assertGreater(completions_tokens, 0)
 
     def test_max_tokens_validation(self):
         client = openai.Client(api_key=self.api_key, base_url=f"{self.base_url}/v1")
