@@ -51,6 +51,7 @@ NPU adaptation notes (see report for the full rationale):
 import logging
 import os
 import tempfile
+import time
 import unittest
 from types import SimpleNamespace
 
@@ -187,9 +188,30 @@ class HiCacheStorageBaseMixin:
 
     def flush_cache(self):
         """Flush the device-tier radix cache so the next request is forced to
-        pull from the remote (file) storage backend."""
-        response = requests.post(f"{self.base_url}/flush_cache", timeout=60)
-        assert response.status_code == 200, response.text
+        pull from the remote (file) storage backend.
+
+        On NPU, `/flush_cache` may transiently return 400 with "Cache not
+        flushed because there are pending requests" even though
+        #queue-req=0 and #running-req=0, because the just-finished request's
+        radix-tree node has not been released yet. Retry with backoff.
+        """
+        backoff = [0.5, 1.0, 2.0, 4.0, 8.0]
+        last_text = ""
+        for i, wait in enumerate(backoff):
+            response = requests.post(f"{self.base_url}/flush_cache", timeout=60)
+            if response.status_code == 200:
+                return
+            last_text = response.text
+            if response.status_code != 400:
+                break
+            logging.warning(
+                "flush_cache attempt %d returned 400 (%s); retrying in %.1fs",
+                i + 1,
+                last_text.strip()[:120],
+                wait,
+            )
+            time.sleep(wait)
+        assert False, f"Flush cache failed after {len(backoff)} retries: {last_text}"
 
     def trigger_offloading_and_flush(self):
         """Force device-cache offload to remote storage, then flush device cache.
