@@ -20,7 +20,7 @@ register_npu_ci(est_time=100, suite="full-1-npu-a3", nightly=True)
 
 
 class TestAnthropicServer(CustomTestCase):
-    """Test Anthropic Claude Compatible Interface"""
+    """Test Anthropic Compatible Interface"""
 
     @classmethod
     def setUpClass(cls):
