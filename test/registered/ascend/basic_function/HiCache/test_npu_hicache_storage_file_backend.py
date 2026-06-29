@@ -278,14 +278,13 @@ class TestHiCacheStorageMLA(HiCacheStorageBaseMixin, CustomTestCase):
         ]
 
 
-@unittest.skipIf(_is_in_ci(), "Skipped in CI: long-running accuracy consistency check")
 class TestHiCacheStorageAccuracy(HiCacheStorageBaseMixin, CustomTestCase):
     """Variant: GSM8K accuracy must be consistent before / after flushing cache.
 
     Ported from the GPU `TestHiCacheStorageAccuracy.test_eval_accuracy`. The
     GPU version asserts two GSM8K runs (before / after flush) differ by < 0.03
     and both > 0.6. We reuse `run_eval` (NPU convention) instead of
-    `MGSMEnMixin`. Skipped in CI because it is a long-running evaluation.
+    `MGSMEnMixin`.
     """
 
     accuracy_threshold = 0.6
