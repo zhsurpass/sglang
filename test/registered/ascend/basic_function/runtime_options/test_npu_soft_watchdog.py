@@ -8,7 +8,6 @@ import requests
 
 from sglang.srt.environ import envs
 from sglang.srt.utils import kill_process_tree
-
 from sglang.test.ascend.test_ascend_utils import QWEN3_0_6B_WEIGHTS_PATH
 from sglang.test.ci.ci_register import register_npu_ci
 from sglang.test.test_utils import (
@@ -210,6 +209,7 @@ class BaseTestSoftWatchdog:
     [Test Category] Parameter
     [Test Target] --soft-watchdog-timeout
     """
+
     env_override = None
     expected_message = None
 
