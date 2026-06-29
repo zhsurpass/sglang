@@ -56,7 +56,9 @@ class _BaseTestNPUMetrics(TestNPULoggingBase):
         print(f"metrics_text=\n{metrics_text}")
 
         metrics = _parse_prometheus_metrics(metrics_text)
-        _verify_metrics_common(self, metrics_text, metrics, expect_mfu_metrics=self.enable_mfu_metrics)
+        _verify_metrics_common(
+            self, metrics_text, metrics, expect_mfu_metrics=self.enable_mfu_metrics
+        )
 
         def _check_dp_cooperation_metrics(metrics):
             # In the GPU scenario test case
@@ -152,6 +154,14 @@ class TestNPUMetrics2NPU(_BaseTestNPUMetrics):
         "2",
         "--enable-dp-attention",
     ]
+    # In single-card scenarios, two identical requests suffice to trigger a KV
+    # cache hit (the second request reuses the cache from the first). However,
+    # with tp=2 dp=2 multi-card parallelism, requests are distributed across
+    # different cards. With too few requests, a single card may not receive
+    # enough duplicates, causing cached_tokens_total to remain zero. Bumping
+    # the repeat count from the default 2 to 6 ensures each card has a high
+    # probability of receiving multiple identical requests, reliably triggering
+    # cache hits.
     repeat_requests_num = 6
     verify_metrics_extra = True
 
