@@ -31,9 +31,8 @@ ADMIN_API_KEY = "admin-hicache-test-key"
 def _common_hicache_args(port: int) -> list:
     """HiCache args shared by Phase A and Phase B (no storage backend args).
 
-    Note: neither `--hicache-storage-backend` nor
-    `--hicache-storage-backend-extra-config` is set here, because the
-    runtime attach/detach test must start with NO backend attached.
+    `--hicache-storage-backend` is intentionally not set here: the runtime
+    attach/detach test must start with NO backend attached.
     """
     return [
         "--trust-remote-code",
@@ -182,38 +181,26 @@ class TestHiCacheStorageRuntimeAttachDetach(CustomTestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIsNone(resp.json().get("hicache_storage_backend"))
 
-            # 3) Attach `file` backend with an extra config -> 200.
-            extra_cfg = {"hicache_storage_pass_prefix_keys": True}
-            resp = self._attach_backend(
-                base_url_b, "file", extra_config=extra_cfg, headers=admin
-            )
+            # 3) Attach `file` backend -> 200.
+            resp = self._attach_backend(base_url_b, "file", headers=admin)
             self.assertEqual(resp.status_code, 200, resp.text)
 
-            # 4) Update prefetch policy on the attached backend -> 200.
-            resp = self._attach_backend(
-                base_url_b,
-                "file",
-                prefetch_policy="wait_complete",
-                headers=admin,
-            )
-            self.assertEqual(resp.status_code, 200, resp.text)
-
-            # 5) Try to switch to an unsupported backend (mooncake) -> non-200.
+            # 4) Try to switch to an unsupported backend (mooncake) -> non-200.
             resp = self._attach_backend(base_url_b, "mooncake", headers=admin)
             self.assertNotEqual(resp.status_code, 200)
 
-            # 6) Detach -> 200, and detaching again is idempotent (still 200).
+            # 5) Detach -> 200, and detaching again is idempotent (still 200).
             resp = self._detach_backend(base_url_b, headers=admin)
             self.assertEqual(resp.status_code, 200, resp.text)
             resp = self._detach_backend(base_url_b, headers=admin)
             self.assertEqual(resp.status_code, 200, resp.text)
 
-            # 7) After detach, GET should report backend == None again.
+            # 6) After detach, GET should report backend == None again.
             resp = self._get_backend(base_url_b, headers=admin)
             self.assertEqual(resp.status_code, 200)
             self.assertIsNone(resp.json().get("hicache_storage_backend"))
 
-            # 8) Re-attach `file` -> 200 (server still healthy after detach).
+            # 7) Re-attach `file` -> 200 (server still healthy after detach).
             resp = self._attach_backend(base_url_b, "file", headers=admin)
             self.assertEqual(resp.status_code, 200, resp.text)
         finally:

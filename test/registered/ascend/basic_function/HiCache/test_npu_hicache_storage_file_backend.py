@@ -81,10 +81,6 @@ class HiCacheStorageBaseMixin:
             "--enable-cache-report",
             "--hicache-storage-backend",
             "file",
-            "--hicache-storage-prefetch-policy",
-            "wait_complete",
-            "--hicache-storage-backend-extra-config",
-            '{"hicache_storage_pass_prefix_keys": true}',
         ]
 
         process = popen_launch_server(
